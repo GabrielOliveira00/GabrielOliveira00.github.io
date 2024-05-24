@@ -7,6 +7,9 @@ import * as Yup from 'yup';
 import axios from 'axios';
 import { v4 as uuid } from "uuid";
 import useSubmitData from '../subData/useSubmitData';
+import { QueryClient, QueryClientProvider } from 'react-query';
+
+const queryClient = new QueryClient();
 
 
 const getId = uuid().slice(0, 8);
@@ -51,6 +54,7 @@ const StudentForm: React.FC = () => {
   };
 
   return (
+    <QueryClientProvider client={queryClient}>
     <div className='flex justify-center items-center w-full h-screen'>
       <div className="bg-gradient-to-b from-blue-500 to-blue-800 p-8 rounded-lg grid grid-cols-1 content-center">
         <h2 className="text-2xl font-bold mb-4 flex items-center justify-center">Student Form</h2>
@@ -88,6 +92,7 @@ const StudentForm: React.FC = () => {
         </Formik>
       </div>
     </div>
+    </QueryClientProvider>
   );
 };
 

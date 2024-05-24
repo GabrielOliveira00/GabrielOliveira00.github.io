@@ -6,6 +6,9 @@ import { v4 as uuid } from "uuid";
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import useSubmitData from '../subData/useSubmitData';
 import * as Yup from 'yup';
+import { QueryClient, QueryClientProvider } from 'react-query';
+
+const queryClient = new QueryClient();
 
 const getId = uuid().slice(0, 8);
 
@@ -35,6 +38,7 @@ const TeacherForm: React.FC = () => {
     }
   };
   return (
+    <QueryClientProvider client={queryClient}>
     <div className='flex justify-center items-center w-full h-screen'>
       <div className="bg-gradient-to-br from-pink-500 to-rose-800 p-8 rounded-lg w-[300px] grid grid-cols-1 content-center">
         <h2 className="text-2xl font-bold mb-4 flex items-center justify-center">Teacher Form</h2>
@@ -67,6 +71,7 @@ const TeacherForm: React.FC = () => {
         </Formik>
       </div>
     </div>
+    </QueryClientProvider>
   );
 };
 
