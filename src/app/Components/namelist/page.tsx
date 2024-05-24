@@ -14,7 +14,7 @@ const fetchApiData = async () => {
   return response.json();
 };
 
-export const NameList = () => {  
+const NameList: React.FC = () =>  {  
 
   const { data, isLoading, isError } = useQuery('apiData', fetchApiData);
 
@@ -54,3 +54,4 @@ export const NameList = () => {
   );
 };
 
+export default NameList;

@@ -2,7 +2,7 @@
 "use client"
 
 import React from 'react';
-import { NameList } from './Components/namelist/page';
+import  NameList  from './Components/namelist/page';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
 const queryClient = new QueryClient();
