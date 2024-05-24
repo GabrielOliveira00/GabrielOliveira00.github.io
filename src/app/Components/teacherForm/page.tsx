@@ -2,15 +2,12 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation'
-import { v4 as uuid } from "uuid";
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import useSubmitData from '../subData/useSubmitData';
+import useTeacherSubmitData from '../teacherSubmitData/useTeacherSubmitData';
 import * as Yup from 'yup';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
 const queryClient = new QueryClient();
-
-const getId = uuid().slice(0, 8);
 
 interface FormValues {
   firstName: string;
@@ -25,7 +22,7 @@ const validationSchema = Yup.object({
 });
 
 const TeacherForm: React.FC = () => {
-  const submitDataMutation = useSubmitData();
+  const submitDataMutation = useTeacherSubmitData();
   const router = useRouter();
   
   const handleSubmit = async (values: FormValues) => {

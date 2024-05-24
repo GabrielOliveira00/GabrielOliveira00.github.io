@@ -2,20 +2,20 @@
 
 import { useMutation } from 'react-query';
 
-interface FormValues {
+interface StudentFormValues {
   firstName: string;
   lastName: string;
   subject: string;
 }
 
-interface ApiResponse {
+interface StudentApiResponse {
     success: boolean;
     message: string;
     // You can include additional fields if needed
   }
 
-const submitData = async (formData: FormValues): Promise<ApiResponse> => {
-    const response = await fetch('https://crudcrud.com/api/ac7871a8422c4def9fc87e95136ddf40/teste', {
+const studentSubmitData = async (formData: StudentFormValues): Promise<StudentApiResponse> => {
+    const response = await fetch('https://crudcrud.com/api/ac7871a8422c4def9fc87e95136ddf40/student', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -30,8 +30,8 @@ const submitData = async (formData: FormValues): Promise<ApiResponse> => {
       return response.json();
     };
     
-const useSubmitData = () => {
-  return useMutation(submitData);
+const useStudentSubmitData = () => {
+  return useMutation(studentSubmitData);
 };
 
-export default useSubmitData;
+export default useStudentSubmitData;

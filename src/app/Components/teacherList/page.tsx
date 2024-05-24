@@ -7,14 +7,14 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 const queryClient = new QueryClient();
 
 const fetchApiData = async () => {
-  const response = await fetch('https://crudcrud.com/api/ac7871a8422c4def9fc87e95136ddf40/teste');
+  const response = await fetch('https://crudcrud.com/api/ac7871a8422c4def9fc87e95136ddf40/teacher');
   if (!response.ok) {
     throw new Error('Failed to fetch data');
   }
   return response.json();
 };
 
-const NameList: React.FC = () =>  {  
+const TeacherList: React.FC = () =>  {  
 
   const { data, isLoading, isError } = useQuery('apiData', fetchApiData);
 
@@ -50,8 +50,9 @@ const NameList: React.FC = () =>  {
             </div>
           )}      
         </div>
+        
     </QueryClientProvider>    
   );
 };
 
-export default NameList;
+export default TeacherList;

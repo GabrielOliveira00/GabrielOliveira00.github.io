@@ -1,23 +1,26 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useRouter } from 'next/navigation'
 import * as Yup from 'yup';
-import axios from 'axios';
-import { v4 as uuid } from "uuid";
-import useSubmitData from '../subData/useSubmitData';
+import useStudentSubmitData from '../studentSubmitData/useStudentSubmitData';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { useQuery } from 'react-query';
 
 const queryClient = new QueryClient();
 
-
-const getId = uuid().slice(0, 8);
-
-interface Teacher {
-  firstName: '',
-  lastName: '',
-  subject: '',
+const fetchApiData = async () => {
+  const response = await fetch('https://crudcrud.com/api/ac7871a8422c4def9fc87e95136ddf40/teacher');
+  if (!response.ok) {
+    throw new Error('Failed to fetch data');
+  }
+  return response.json();
+};
+interface FormValues {
+  firstName: string;
+  lastName: string;
+  subject: string;
 }
 
 const validationSchema = Yup.object({
@@ -26,33 +29,24 @@ const validationSchema = Yup.object({
 });
 
 const StudentForm: React.FC = () => {
-
+  const submitDataMutation = useStudentSubmitData();
   const router = useRouter();
-  const [teachers, setTeachers] = useState<Teacher[]>([]);
 
-  console.log(teachers)
-  useEffect(() => {
+  const { data, isLoading, isError } = useQuery('apiData', fetchApiData);
+  
+  if (isLoading) return <option>Loading...</option>;
+  if (isError) return <option>Please Register a Teacher</option>;
 
-    axios.get<Teacher[]>('https://crudcrud.com/api/8463840201af4f68b17be3be5f81af40/teachers')
-      .then(response => {
-        setTeachers(response.data);
-      })
-      .catch(error => {
-        console.error('Error fetching teachers:', error);
-      });
-  }, []);
-
-  const submitDataMutation = useSubmitData();
-
-  const handleSubmit = async (values: Teacher) => {
+  
+  const handleSubmit = async (values: FormValues) => {
     try {
       await submitDataMutation.mutateAsync(values);
-      console.log('Student data submitted successfully');
+      router.push('/')
+      console.log('Teacher data submitted successfully');
     } catch (error) {
-      console.error('Error submitting student data:', error);
+      console.error('Error submitting teacher data:', error);
     }
   };
-
   return (
     <QueryClientProvider client={queryClient}>
     <div className='flex justify-center items-center w-full h-screen'>
@@ -78,8 +72,8 @@ const StudentForm: React.FC = () => {
               <label htmlFor="teacherId" className="block text-white">Teacher</label>
               <Field as="select" id="teacherId" name="teacherId" className="mt-1 p-2 block w-full rounded-md bg-white text-black">
                 <option value="">Select a teacher</option>
-                {teachers.map(teacher => (
-                  <option key={getId} className='text-black'>{teacher.firstName} {teacher.lastName} </option>
+                {data.map((option: any) => (
+                  <option key={option.id} className='text-black'>{option.firstName} {option.lastName} </option>
                 ))}
               </Field>
               <ErrorMessage name="teacherId" component="div" className="text-red-500" />
