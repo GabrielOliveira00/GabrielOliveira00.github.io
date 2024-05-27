@@ -11,7 +11,7 @@ import { useQuery } from 'react-query';
 const queryClient = new QueryClient();
 
 const fetchApiData = async () => {
-  const response = await fetch('https://crudcrud.com/api/ac7871a8422c4def9fc87e95136ddf40/teacher');
+  const response = await fetch('https://crudcrud.com/api/29957fd712f84e87a923e3aeaf8e8a15/teacher');
   if (!response.ok) {
     throw new Error('Failed to fetch data');
   }
@@ -49,25 +49,30 @@ const StudentForm: React.FC = () => {
   };
   return (
     <QueryClientProvider client={queryClient}>
-    <div className='flex justify-center items-center w-full h-screen'>
-      <div className="bg-gradient-to-b from-blue-500 to-blue-800 p-8 rounded-lg grid grid-cols-1 content-center">
-        <h2 className="text-2xl font-bold mb-4 flex items-center justify-center">Student Form</h2>
-        <Formik
-          initialValues={{ firstName: '', lastName: '', subject: '' }}
-          validationSchema={validationSchema}
-          onSubmit={handleSubmit}
-        >
-          <Form>
-            <div className="mb-4">
-              <label htmlFor="firstName" className="block text-white">First Name</label>
-              <Field type="text" id="firstName" name="firstName" className="mt-1 p-2 block w-full rounded-md bg-white text-black" />
-              <ErrorMessage name="firstName" component="div" className="text-red-500" />
-            </div>
-            <div className="mb-4">
-              <label htmlFor="lastName" className="block text-white">Last Name</label>
-              <Field type="text" id="lastName" name="lastName" className="mt-1 p-2 block w-full rounded-md bg-white text-black" />
-              <ErrorMessage name="lastName" component="div" className="text-red-500" />
-            </div>
+    <div className='min-h-screen bg-gray-800 py-6 flex flex-col justify-center sm:py-12'>
+      <div className='relative py-3 max-w-xl sm:mx-auto'>
+        <div className='absolute inset-0 bg-indigo-400 shadow-lg transform -skew-y-5 -rotate-6 rounded-3xl'/>
+        <div className="relative sm:max-w-xl sm:mx-auto text-white px-4 py-10 bg-gradient-to-r from-indigo-700 to-purple-500 shadow-lg sm:rounded-3xl sm:p-20">
+          <div className='flex justify-center items-center h-12'>
+            <h2 className="text-2xl font-bold mt-6 flex items-center justify-center absolute top-8">Student Form!</h2>
+            <p className="text-gray-300 mb-4">
+              Register a new Student.
+            </p>
+          </div>
+          <Formik
+            initialValues={{ firstName: '', lastName: '', subject: '' }}
+            validationSchema={validationSchema}
+            onSubmit={handleSubmit}
+          >
+            <Form>
+              <div className="mb-4">
+                <Field type="text" id="firstName" name="firstName" placeholder="First Name" className="shadow mb-4 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+                <ErrorMessage name="firstName" component="div" className="text-gray-300" />
+              </div>
+              <div className="mb-4">
+                <Field type="text" id="lastName" name="lastName" placeholder="Last Name" className="shadow mb-4 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+                <ErrorMessage name="lastName" component="div" className="text-gray-300" />
+              </div>
             <div className="mb-4">
               <label htmlFor="teacherId" className="block text-white">Teacher</label>
               <Field as="select" id="teacherId" name="teacherId" className="mt-1 p-2 block w-full rounded-md bg-white text-black">
@@ -79,12 +84,13 @@ const StudentForm: React.FC = () => {
               <ErrorMessage name="teacherId" component="div" className="text-red-500" />
             </div>
             <div className='flex justify-between'>
-              <button type="button" onClick={() => router.push('/')} className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-full transition duration-200 ease-in-out transform hover:scale-105">Cancel</button>
-              <button type="submit" className="bg-pink-500 hover:bg-pink-600 text-white font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105">Submit</button>
-            </div>
+                <button type="button" onClick={() => router.push('/')} className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full transition duration-200 ease-in-out transform hover:scale-105">← Back</button>
+                <button type="submit" className=" bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105">Submit →</button>
+              </div>
           </Form>
         </Formik>
       </div>
+    </div>
     </div>
     </QueryClientProvider>
   );

@@ -7,7 +7,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 const queryClient = new QueryClient();
 
 const fetchApiData = async () => {
-  const response = await fetch('https://crudcrud.com/api/ac7871a8422c4def9fc87e95136ddf40/teacher');
+  const response = await fetch('https://crudcrud.com/api/29957fd712f84e87a923e3aeaf8e8a15/teacher');
   if (!response.ok) {
     throw new Error('Failed to fetch data');
   }
@@ -25,32 +25,33 @@ const TeacherList: React.FC = () =>  {
   };
   
   return (
-    <QueryClientProvider client={queryClient}>
-        <div className="bg-gradient-to-br from-red-500 to-rose-800 p-8 rounded-lg w-[300px] h-[600px]">  
+    <QueryClientProvider client={queryClient}>  
+      <div className='relative py-3 max-w-xl min-w-[400px] sm:mx-auto'>
+        <div className='absolute inset-0 bg-gradient-to-r from-indigo-700 to-purple-500 shadow-lg transform -skew-y-5 -rotate-6 rounded-3xl'/>
+        <div className="text-white relative px-4 bg-indigo-400 shadow-lg sm:rounded-3xl min-h-[600px] flex flex-col">   
           {data && (
-            <div>
-              <div className='flex'>
+            <div className='flex'>
+              <div>
                 {data.map((option: any) => (
-                  <div className="relative flex justify-between" key={option.id}>
-                    <div>
+                  <div className="relative flex justify-between shadow mb-4 appearance-none border rounded w-full py-1 px-3 bg-gray-200 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" key={option.id}>
+                    <div className='flex items-center'>
                       <Link href="/Components/summaryCard">
-                        <h2 className="text-black font-semibold text-xl">{option.firstName}</h2>
-                        <h2 className="text-black font-semibold text-xl">{option.lastName}</h2>
+                        <h2 className="text-black font-semibold">{option.firstName} {option.lastName}</h2>
                       </Link>                      
                     </div>
-                    <button onClick={() => deletePost(option.id)} className='flex'>Delete</button>
+                    <button onClick={() => deletePost(option.id)} className="bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-3 rounded-full transition duration-200 ease-in-out transform hover:scale-[1.02]">Delete</button>
                   </div>       
                 ))}
-              </div>
-              <div className="h-screen flex justify-center items-center">
-                <Link href="/Components/teacherForm" className="bg-gradient-to-r from-pearl to-blue-200 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                </div>
+              <div className="">
+                <Link href="/Components/teacherForm" className="absolute bottom-10 shadow bg-indigo-600 hover:bg-indigo-700 text-white  py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                   Register a Teacher
                 </Link>
               </div>
             </div>
           )}      
         </div>
-        
+      </div>  
     </QueryClientProvider>    
   );
 };

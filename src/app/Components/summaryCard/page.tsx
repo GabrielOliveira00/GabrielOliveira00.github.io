@@ -26,8 +26,8 @@ export default function SummaryCard ()  {
 
     return(
         <QueryClientProvider client={queryClient}>
-        <div className='grid grid-cols-1 content-center justify-center h-screen'>
-            <div className=" bg-yellow-600 border border-pink-500 shadow-lg rounded-lg p-4 w-[300px] grid grid-cols-1 content-center justify-center">
+        <div className=''>
+            <div className=" bg-yellow-600 border border-pink-500 shadow-lg rounded-lg p-4">
                 <h2 className="text-pink-900 font-bold text-lg">Floating Card</h2>
                 <div>
                     <p>First Name: {data.firstname}</p>

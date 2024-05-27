@@ -15,7 +15,7 @@ interface StudentApiResponse {
   }
 
 const studentSubmitData = async (formData: StudentFormValues): Promise<StudentApiResponse> => {
-    const response = await fetch('https://crudcrud.com/api/ac7871a8422c4def9fc87e95136ddf40/student', {
+    const response = await fetch('https://crudcrud.com/api/29957fd712f84e87a923e3aeaf8e8a15/student', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

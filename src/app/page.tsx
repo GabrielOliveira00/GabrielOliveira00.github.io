@@ -14,15 +14,11 @@ export default function Home() {
 
 
   return (
-    <div className='flex justify-center items-center'>
+    <div className='min-h-screen bg-gray-800 py-6 flex flex-col justify-center sm:py-12'>
       <QueryClientProvider client={queryClient}>
-        <div className="flex">
-          <div className='mr-40'>
-            <StudentList/>
-          </div>
-          <div>
-           <TeacherList/>
-          </div>
+        <div className="flex justify-between w-full">
+            <StudentList/>   
+           <TeacherList/>   
         </div>
       </QueryClientProvider>
   </div>
