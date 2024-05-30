@@ -4,14 +4,14 @@ import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useRouter } from 'next/navigation'
 import * as Yup from 'yup';
-import useStudentSubmitData from '../studentSubmitData/useStudentSubmitData';
+import { useTeacherMutate } from '../hooks/useStudentMutate';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { useQuery } from 'react-query';
 
 const queryClient = new QueryClient();
 
 const fetchApiData = async () => {
-  const response = await fetch('https://crudcrud.com/api/29957fd712f84e87a923e3aeaf8e8a15/teacher');
+  const response = await fetch('https://crudcrud.com/api/e262e8c327214729b48366c5f91988fb/teacher');
   if (!response.ok) {
     throw new Error('Failed to fetch data');
   }
@@ -29,23 +29,18 @@ const validationSchema = Yup.object({
 });
 
 const StudentForm: React.FC = () => {
-  const submitDataMutation = useStudentSubmitData();
+  const {mutate, isSuccess} = useTeacherMutate();
   const router = useRouter();
 
   const { data, isLoading, isError } = useQuery('apiData', fetchApiData);
   
   if (isLoading) return <option>Loading...</option>;
   if (isError) return <option>Please Register a Teacher</option>;
-
   
-  const handleSubmit = async (values: FormValues) => {
-    try {
-      await submitDataMutation.mutateAsync(values);
-      router.push('/')
-      console.log('Teacher data submitted successfully');
-    } catch (error) {
-      console.error('Error submitting teacher data:', error);
-    }
+  const handleSubmit = (data: FormValues) => {
+    localStorage.setItem('formData', JSON.stringify(data));
+    mutate(data);
+    isSuccess? true: router.push('/');
   };
   return (
     <QueryClientProvider client={queryClient}>

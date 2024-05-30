@@ -1,11 +1,11 @@
 "use client";
 
-import React,{useEffect} from 'react';
+import React from 'react';
 import { useRouter } from 'next/navigation'
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import useTeacherSubmitData from '../teacherSubmitData/useTeacherSubmitData';
 import * as Yup from 'yup';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { useTeacherMutate } from '../hooks/useTeacherMutate';
 
 const queryClient = new QueryClient();
 
@@ -22,76 +22,17 @@ const validationSchema = Yup.object({
 });
 
 const TeacherForm: React.FC = () => {
-  const submitDataMutation = useTeacherSubmitData();
+  const {mutate, isSuccess} = useTeacherMutate();
   const router = useRouter();
   
-  const handleSubmit = async (values: FormValues) => {
-    localStorage.setItem('formData', JSON.stringify(values));
+  const handleSubmit = (data: FormValues) => {
+    localStorage.setItem('formData', JSON.stringify(data));
     alert('Data saved to localStorage');
-    sendDataToAPI(values);
-
-    try {
-      await submitDataMutation.mutateAsync(values);
-      router.push('/')
-      console.log('Teacher data submitted successfully');
-    } catch (error) {
-      console.error('Error submitting teacher data:', error);
-    }
+    mutate(data);
+    isSuccess? true: router.push('/');
   };
 
-  const sendDataToAPI = async (data: FormValues) => {
-    try {
-      const response = await fetch('https://crudcrud.com/api/29957fd712f84e87a923e3aeaf8e8a15/teacher', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
 
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-
-      const result = await response.json();
-      console.log('Success:', result);
-      alert('Data sent to API successfully');
-    } catch (error) {
-      console.error('Error sending data to API:', error);
-      alert('Failed to send data to API');
-    }
-  };
-
-  useEffect(() => {
-    const checkApiData = async () => {
-      try {
-        const response = await fetch('https://crudcrud.com/api/29957fd712f84e87a923e3aeaf8e8a15/teacher', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-
-        const apiData = await response.json();
-
-        if (!apiData || apiData.length === 0) {
-          const localData = localStorage.getItem('formData');
-          if (localData) {
-            const parsedData: FormValues = JSON.parse(localData);
-            await sendDataToAPI(parsedData);
-          }
-        }
-      } catch (error) {
-        console.error('Error checking API data:', error);
-      }
-    };
-
-    checkApiData();
-  }, []);
   return (
     <QueryClientProvider client={queryClient}>
     <div className='min-h-screen bg-gray-800 py-6 flex flex-col justify-center sm:py-12'>
