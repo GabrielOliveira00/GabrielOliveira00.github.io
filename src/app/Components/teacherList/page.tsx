@@ -21,10 +21,10 @@ const TeacherList: React.FC = () =>  {
         <div className='absolute inset-0 bg-gradient-to-r from-indigo-700 to-purple-500 shadow-lg transform -skew-y-5 -rotate-6 rounded-3xl'/>
         <div className="text-white relative px-4 bg-indigo-400 shadow-lg sm:rounded-3xl min-h-[600px] flex flex-col">   
         {!isLoading && <>
-          {data?.data && (
+          {data && (
               <div className='flex'>
                 <div>
-                  {data?.data.map((option: any) => (
+                  {data.map((option: any) => (
                     <div className="relative flex justify-between shadow mb-4 appearance-none border rounded w-full py-1 px-3 bg-gray-200 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" key={option.id}>
                       <div className='flex items-center'>
                         <Link href="/Components/summaryCard">

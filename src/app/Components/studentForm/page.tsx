@@ -11,7 +11,7 @@ import { useQuery } from 'react-query';
 const queryClient = new QueryClient();
 
 const fetchApiData = async () => {
-  const response = await fetch('https://crudcrud.com/api/e262e8c327214729b48366c5f91988fb/teacher');
+  const response = await fetch('https://crudcrud.com/api/27dbaaa91a1346fa82a9390af4bf56eb/teacher');
   if (!response.ok) {
     throw new Error('Failed to fetch data');
   }

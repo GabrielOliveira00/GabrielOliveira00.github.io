@@ -11,6 +11,8 @@ const StudentList: React.FC = () =>  {
 
   const {data, isLoading, isError} = useStudentData();
 
+  console.log(data)
+
   const deletePost = async (firstName: string) => {
   };
   
@@ -21,10 +23,10 @@ const StudentList: React.FC = () =>  {
         <div className="text-white relative px-4 bg-indigo-400 shadow-lg sm:rounded-3xl min-h-[600px] justify-between">  
         <div>
           {!isLoading && <>
-            {data?.data && (
+            {data && (
               <div>
                 <div className='flex'>
-                  {data?.data.map((option: any) => (
+                  {data.map((option: any) => (
                     <div className="relative flex justify-between" key={option.id}>
                       <div>
                         <Link href="/Components/summaryCard">

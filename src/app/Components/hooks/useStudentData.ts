@@ -1,14 +1,15 @@
 import { useQuery } from "react-query";
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 import { StudentResponse } from "@/app/Interfaces";
 
-{/* @ts-expect-error async server Component */}
 
-const fetchData = async (): AxiosResponse<StudentResponse> => {    
-    const response = await axios.get<StudentResponse>('https://crudcrud.com/api/e262e8c327214729b48366c5f91988fb/Student');
+
+const fetchData = async () => {   
+    const response = await axios.get('https://crudcrud.com/api/27dbaaa91a1346fa82a9390af4bf56eb/Student');
     return response;
 };
 
+console.log(fetchData)
 export const useStudentData = () =>{
     const query = useQuery({
         queryFn: fetchData,
