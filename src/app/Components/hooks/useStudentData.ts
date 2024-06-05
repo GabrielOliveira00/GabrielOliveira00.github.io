@@ -5,7 +5,7 @@ import { StudentResponse } from "@/app/Interfaces";
 
 
 const fetchData = async () => {   
-    const response = await axios.get('https://crudcrud.com/api/27dbaaa91a1346fa82a9390af4bf56eb/Student');
+    const response = await axios.get('https://crudcrud.com/api/867d6b911ca747e8bda2a6805c0c4a17/Student');
     return response;
 };
 
