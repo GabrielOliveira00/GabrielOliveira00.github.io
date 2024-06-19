@@ -3,26 +3,17 @@
 import Link from 'next/link';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { useTeacherData } from '../hooks/useTeacherData';
-import { DataTeste } from '../hooks/mock';
-import Pagination from '../hooks/pagination';
 import Modal from '../modalDelete/modal';
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 const queryClient = new QueryClient();
 
-let PageSize = 3;
 
-const TeacherList = () =>  {  
+const TeacherSummary = () =>  {  
+  const router = useRouter();
   const [open, setOpen] = useState(false)
   const {data, isLoading, isError} = useTeacherData();
-
-  const [currentPage, setCurrentPage] = useState(1);
-
-  const currentTableData = useMemo(() => {
-    const firstPageIndex = (currentPage - 1) * PageSize;
-    const lastPageIndex = firstPageIndex + PageSize;
-    return DataTeste.slice(firstPageIndex, lastPageIndex);
-  }, [currentPage]);
 
   console.log(data)
   
@@ -35,30 +26,42 @@ const TeacherList = () =>  {
           {data && (
               <div className='flex'>
                 <div className='w-full'>
-                  {currentTableData.map((option: any) => (
-                    <div key={option.id} className='flex flex-col justify-center items-center'> <h1 className='text-xl text-black font-bold mt-4'>Teacher List</h1>  <div className="relative flex items-center justify-between shadow-lg mt-4 mb-4 appearance-none border rounded w-full py-1 px-3 bg-indigo-200 text-indigo-700 leading-tight focus:outline-none focus:shadow-outline">
-                      <div className='flex items-center w-full'>
-                        <Link href="/Components/summaryCard" className='w-full'>
-                          <h2 className="text-black font-semibold">{option.firstName} {option.lastName}</h2>
-                          <span className="text-black text-md">{option.subject}</span>
-                      </Link>                      
-                     </div>
-                     <button className="bg-green-600 hover:bg-green-700 text-white font-semibold py-[5px] px-[5px] ml-3 transition rounded-full duration-200 ease-in-out transform text-sm">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" className="bi bi-three-dots" viewBox="0 0 16 16">
-                          <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3"/>
-                        </svg>
-                     </button>
-                      <button onClick={() => setOpen(true)} className="bg-red-600 hover:bg-red-700 text-white font-semibold py-[1px] px-[7px] ml-3 transition rounded-full duration-200 ease-in-out transform text-sm">x</button>
-                    </div>  
-                  </div>  
+                  {data.map((option: any) => (
+                    <div className='relative h-[600px] justify-center' key="">    
+                      <div>
+                        <div className='inset-0 my-4 bg-gradient-to-r from-indigo-700 to-purple-500 shadow-lg rounded-sm'>
+                          <ol>
+                            <li className='py-1 ml-4'>Student Name</li>
+                            <li className='py-1 ml-4'>Subject</li>
+                          </ol>
+                        </div>  
+                        <div className='inset-0 my-4 bg-gradient-to-r from-indigo-700 to-purple-500 shadow-lg rounded-sm'>
+                          <ol>
+                            <li className='py-1 ml-4'>1º - First Teacher</li>
+                            <li className='py-1 ml-4'>2º - Second Teacher</li>
+                            <li className='py-1 ml-4'>3º - Third Teacher</li>
+                            <li className='py-1 ml-4'>4º - Fourth Teacher</li>
+                          </ol>
+                        </div>  
+                      </div>
+                      <div className='absolute bottom-6 w-full flex justify-between'>
+                          <button type="button" onClick={() => setOpen(true)} className="bg-red-600 hover:bg-red-700 flex items-center text-white font-bold h-8 px-2 rounded-md transition duration-200 ease-in-out transform hover:scale-105">
+                            Delete
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" className="bi bi-trash ml-2" viewBox="0 0 16 16">
+                              <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                              <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+                            </svg>
+                          </button>
+                          <button type="button" onClick={() => router.push('/Components/teacherForm')} className=" bg-indigo-600 hover:bg-indigo-700 flex items-center text-white font-bold h-8 px-2 rounded-md transition duration-300 ease-in-out transform hover:scale-105">
+                            Edit
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" className="bi bi-pencil ml-2" viewBox="0 0 16 16">
+                              <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
+                            </svg>
+                          </button>
+                        </div>  
+                    </div>
                   ))}
-                  <Pagination
-                    className="w-full"
-                    currentPage={currentPage}
-                    totalCount={DataTeste.length}
-                    pageSize={PageSize}
-                    onPageChange={(page: any) => setCurrentPage(page)}
-                  />      
+   
                 </div>  
                 <Modal open={open} onClose={() => setOpen(false)}>
                   <div className="text-center w-56">
@@ -83,20 +86,17 @@ const TeacherList = () =>  {
                       </button>
                     </div>
                   </div>
-                </Modal>         
-              </div>
+                </Modal>    
+           
+              </div>              
             )}</>}
-           <div className="flex justify-center items-center">
-            <Link href="/Components/teacherForm" className="absolute bottom-10 shadow bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-              Register a Student
-            </Link>
-          </div>
+    
           { isLoading && <span>Datas is being loaded</span>}
-          { isError && <span>Error!</span>}
+          { isError && <span>Error</span>}
         </div>
       </div>  
     </QueryClientProvider>    
   );
 };
 
-export default TeacherList;
+export default TeacherSummary;
