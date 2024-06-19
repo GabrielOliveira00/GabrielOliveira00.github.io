@@ -3,28 +3,26 @@
 import Link from 'next/link';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { useTeacherData } from '../hooks/useTeacherData';
-import PaginationControls from '../hooks/paginationControl';
+import { DataTeste } from '../hooks/mock';
+import Pagination from '../hooks/pagination';
 import Modal from '../modalDelete/modal';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 
 const queryClient = new QueryClient();
 
-const dataSimulation = [
-  'entry 1',
-  'entry 2',
-  'entry 3',
-  'entry 4',
-  'entry 5',
-  'entry 6',
-  'entry 7',
-  'entry 8',
-  'entry 9',
-  'entry 10',
-]
+let PageSize = 3;
 
-const TeacherList = ({searchParams, }: {  searchParams: { [key: string]: string | string[] | any }}) =>  {  
+const TeacherList = () =>  {  
   const [open, setOpen] = useState(false)
   const {data, isLoading, isError} = useTeacherData();
+
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const currentTableData = useMemo(() => {
+    const firstPageIndex = (currentPage - 1) * PageSize;
+    const lastPageIndex = firstPageIndex + PageSize;
+    return DataTeste.slice(firstPageIndex, lastPageIndex);
+  }, [currentPage]);
 
   console.log(data)
   
@@ -87,7 +85,37 @@ const TeacherList = ({searchParams, }: {  searchParams: { [key: string]: string 
             </Link>
           </div>
           { isLoading && <span>Datas is being loaded</span>}
-          { isError && <span>Error!</span>}
+          { isError && <div className='relative h-full'><table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>FIRST NAME</th>
+            <th>LAST NAME</th>
+            <th>EMAIL</th>
+            <th>PHONE</th>
+          </tr>
+        </thead>
+        <tbody>
+          {currentTableData.map((item:any)  => {
+            return (
+              <tr key="">
+                <td>{item.id}</td>
+                <td>{item.first_name}</td>
+                <td>{item.last_name}</td>
+                <td>{item.email}</td>
+                <td>{item.phone}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+      <Pagination
+        className="w-full"
+        currentPage={currentPage}
+        totalCount={DataTeste.length}
+        pageSize={PageSize}
+        onPageChange={(page: any) => setCurrentPage(page)}
+      /></div>}
         </div>
       </div>  
     </QueryClientProvider>    

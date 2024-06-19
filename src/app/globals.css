@@ -40,3 +40,24 @@ body {
     background-color: #adcbe3;
   }
 }
+
+.arrow::before {
+
+  position: relative;
+  /* top: 3pt; Uncomment this to lower the icons as requested in comments*/
+  content: '';
+  /* By using an em scale, the arrows will size with the font */
+  display: inline-block;
+  width: 0.4em;
+  height: 0.4em;
+  border-right: 0.12em solid rgba(0, 0, 0, 0.87);
+  border-top: 0.12em solid rgba(0, 0, 0, 0.87);
+}
+
+.arrow .left {
+  transform: rotate(-85deg) translate(100%);
+}
+
+.arrow .right {
+  transform: rotate(45deg);
+}
