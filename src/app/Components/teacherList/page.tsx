@@ -25,7 +25,7 @@ const TeacherList = () =>  {
   }, [currentPage]);
 
   console.log(data)
-  
+   
   return (
     <QueryClientProvider client={queryClient}>  
       <div className='relative py-3 max-w-xl min-w-[400px] sm:mx-auto'>
@@ -35,10 +35,10 @@ const TeacherList = () =>  {
           {data && (
               <div className='flex'>
                 <div className='w-full'>
-                  {currentTableData.map((option: any) => (
+                  {data.map((option: any) => (
                     <div key={option.id} className='flex flex-col justify-center items-center'> <h1 className='text-xl text-black font-bold mt-4'>Teacher List</h1>  <div className="relative flex items-center justify-between shadow-lg mt-4 mb-4 appearance-none border rounded w-full py-1 px-3 bg-indigo-200 text-indigo-700 leading-tight focus:outline-none focus:shadow-outline">
                       <div className='flex items-center w-full'>
-                        <Link href="/Components/summaryCard" className='w-full'>
+                        <Link href="/Components/teacherSummaryCard" className='w-full'>
                           <h2 className="text-black font-semibold">{option.firstName} {option.lastName}</h2>
                           <span className="text-black text-md">{option.subject}</span>
                       </Link>                      
@@ -88,7 +88,7 @@ const TeacherList = () =>  {
             )}</>}
            <div className="flex justify-center items-center">
             <Link href="/Components/teacherForm" className="absolute bottom-10 shadow bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-              Register a Student
+              Register a Teacher
             </Link>
           </div>
           { isLoading && <span>Datas is being loaded</span>}

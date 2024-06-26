@@ -5,7 +5,7 @@ import { TeacherResponse } from "@/app/Interfaces";
 
 
  const fetchData = async () => {   
-    const response = await axios.get('https://crudcrud.com/api/867d6b911ca747e8bda2a6805c0c4a17/teacher');
+    const response = await axios.get('https://crudcrud.com/api/baa5b0031d014e05b54e62ea7041dbf0/teacher');
     console.log(response.data)
     return response
 };

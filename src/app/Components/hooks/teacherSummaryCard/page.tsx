@@ -9,14 +9,14 @@ const queryClient = new QueryClient();
 
 
 const fetchApiData = async () => {
-    const response = await fetch('https://crudcrud.com/api/baa5b0031d014e05b54e62ea7041dbf0/student');
+    const response = await fetch('https://crudcrud.com/api/baa5b0031d014e05b54e62ea7041dbf0/teacher');
     if (!response.ok) {
       throw new Error('Failed to fetch data');
     }
     return response.json();
   };
 
-export default function SummaryCard ()  {
+export default function TeacherSummaryCard ()  {
     const router = useRouter();
 
     const { data, isLoading, isError } = useQuery('apiData', fetchApiData);
