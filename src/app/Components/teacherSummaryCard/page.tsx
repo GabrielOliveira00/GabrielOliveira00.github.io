@@ -9,7 +9,7 @@ const queryClient = new QueryClient();
 
 
 const fetchApiData = async () => {
-    const response = await fetch('https://crudcrud.com/api/baa5b0031d014e05b54e62ea7041dbf0/teacher');
+    const response = await fetch('https://crudcrud.com/api/352c3afb135a4ea7abe461f02981c8e1/teacher');
     if (!response.ok) {
       throw new Error('Failed to fetch data');
     }
@@ -30,7 +30,7 @@ export default function TeacherSummaryCard ()  {
         <QueryClientProvider client={queryClient}>
         <div className=''>
             <div className=" bg-yellow-600 border border-pink-500 shadow-lg rounded-lg p-4">
-                <h2 className="text-pink-900 font-bold text-lg">Floating Card</h2>
+                <h2 className="text-pink-900 font-bold text-lg">Teacher Card</h2>
                 {data.map((option:any) => (
                 <div key="">
                     <p>First Name: {option.firstName}</p>

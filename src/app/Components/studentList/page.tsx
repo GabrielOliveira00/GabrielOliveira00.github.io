@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { useStudentData } from '../hooks/useStudentData';
 import Modal from '../modalDelete/modal';
-import { useState } from 'react';
+import { useState } from 'react' ;
 
 const queryClient = new QueryClient();
 
@@ -33,16 +33,16 @@ const StudentList: React.FC = () =>  {
                     <div key={option.id} className='flex flex-col justify-center items-center'> 
                       <div className="relative flex items-center justify-between shadow-lg mt-4 mb-4 appearance-none border rounded w-full py-1 px-3 bg-indigo-200 text-indigo-700 leading-tight focus:outline-none focus:shadow-outline">
                         <div className='flex items-center w-full'>
-                          <Link href="/Components/summaryCard" className='w-full'>
+                          <Link href="/Components/studentSummaryCard" className='w-full'>
                             <h2 className="text-black font-semibold">{option.firstName} {option.lastName}</h2>
                             <span className="text-black text-md">{option.subject}</span>
                         </Link>                      
                       </div>
-                      <button className="bg-green-600 hover:bg-green-700 text-white font-semibold py-[5px] px-[5px] ml-3 transition rounded-full duration-200 ease-in-out transform text-sm">
+                      <Link href={`/Components/updateComponent/${data._id}`} className="bg-green-600 hover:bg-green-700 text-white font-semibold py-[5px] px-[5px] ml-3 transition rounded-full duration-200 ease-in-out transform text-sm">
                           <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" className="bi bi-three-dots" viewBox="0 0 16 16">
                             <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3"/>
                           </svg>
-                      </button>
+                      </Link>
                         <button onClick={() => setOpen(true)} className="bg-red-600 hover:bg-red-700 text-white font-semibold py-[1px] px-[7px] ml-3 transition rounded-full duration-200 ease-in-out transform text-sm">x</button>
                       </div>  
                     </div>  

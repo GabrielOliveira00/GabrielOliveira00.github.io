@@ -9,7 +9,7 @@ const queryClient = new QueryClient();
 
 
 const fetchApiData = async () => {
-    const response = await fetch('https://crudcrud.com/api/baa5b0031d014e05b54e62ea7041dbf0/student');
+    const response = await fetch('https://crudcrud.com/api/352c3afb135a4ea7abe461f02981c8e1/student');
     if (!response.ok) {
       throw new Error('Failed to fetch data');
     }
