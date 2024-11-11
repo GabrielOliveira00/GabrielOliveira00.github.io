@@ -9,13 +9,6 @@ import axios from 'axios';
 
 const queryClient = new QueryClient();
 
-interface FormValues {
-  id: any;
-  firstName: string;
-  lastName: string;
-  subject: string;
-}
-
 
 const TeacherFormUpdate: React.FC = () => {
   const searchParams = useSearchParams();
@@ -30,19 +23,22 @@ const TeacherFormUpdate: React.FC = () => {
     subject: ""
   })
 
-  console.log(values)
+  console.log(idCatcher)
+
   const handleSubmit = () => {
-    axios.put(`https://crudcrud.com/api/352c3afb135a4ea7abe461f02981c8e1/teacher/${idCatcher}`,values)
+    axios.put(`http://localhost:3005/student/${idCatcher}`,values)
     router.push('/');
   };
 
   useEffect(()=> {
-    axios.get(`https://crudcrud.com/api/352c3afb135a4ea7abe461f02981c8e1/teacher/${idCatcher}`)
+  
+    axios.get(`http://localhost:3005/student/${idCatcher}`)
     .then(res => {
       setValues({...values, id: idCatcher, firstName: res.data.firstName, lastName: res.data.lastName, subject: res.data.subject})
 
     })
     .catch(err => console.log(err))
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
 
   }, [])

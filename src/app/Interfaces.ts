@@ -9,9 +9,9 @@ export interface TeacherResponse {
 }
 
 export interface StudentData {
-  firstName: string,
-  lastName: string,
-  subject: string
+  name: string,
+  email: string,
+
   }
 
 export interface StudentResponse {

@@ -27,7 +27,7 @@ const TeacherSummary = () =>  {
               <div className='flex'>
                 <div className='w-full'>
                   {data.map((option: any) => (
-                    <div className='relative h-[600px] justify-center' key="">    
+                    <div className='relative h-[600px] justify-center' key={option._id}>    
                       <div>
                         <div className='inset-0 my-4 bg-gradient-to-r from-indigo-700 to-purple-500 shadow-lg rounded-sm'>
                           <ol>

@@ -1,7 +1,9 @@
 import React from 'react';
 import { usePagination, DOTS } from './usePagination';
+import { uniqueID } from './uniqueID';
 
 const Pagination = (props: any) => {
+
   const {
     onPageChange,
     totalCount,
@@ -38,11 +40,11 @@ const Pagination = (props: any) => {
       </li>
       {paginationRange.map((pageNumber :any) => {
         if (pageNumber === DOTS) {
-          return <li key="">&#8230;</li>;
+          return <li key={uniqueID()}>&#8230;</li>;
         }
 
         return (
-          <li key="" className='hover:cursor-pointer hover:text-[#7246DF] hover:opacity-70' onClick={() => onPageChange(pageNumber)}>
+          <li key={uniqueID()} className='hover:cursor-pointer hover:text-[#7246DF] hover:opacity-70' onClick={() => onPageChange(pageNumber)}>
             {pageNumber}
           </li>
         );

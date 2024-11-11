@@ -4,10 +4,10 @@ import { StudentData } from "@/app/Interfaces";
 
 
 const postData = async (data: StudentData) => {
-    return await axios.post('https://crudcrud.com/api/352c3afb135a4ea7abe461f02981c8e1/student', data)
+    return await axios.post('http://localhost:3005/students', data)
   };
 
-export function useTeacherMutate (){
+export function useStudentData (){
     const queryClient = useQueryClient();
     const mutate = useMutation({
         mutationFn: postData,
