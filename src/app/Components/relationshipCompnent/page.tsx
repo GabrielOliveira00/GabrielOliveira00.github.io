@@ -1,200 +1,184 @@
 "use client";
-
-import React, { useState, useEffect } from 'react';
-import { Formik, Form, Field } from 'formik';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-type Student = {
+interface Student {
   id: string;
-  name: string;
-  email:string;
-  teachersCount: number;
-};
-
-interface Teacher {
-  id: number;
   name: string;
   email: string;
-  role: string;
-  avatar: string;
 }
 
-type Class = {
+interface StudentClasses {
+  classId: string;
+  studentId: string;
+}
+
+interface Class {
   id: string;
-  teacherId: string;
   title: string;
-  teacher: Teacher;  
-  studentsCount: number;
-};
+  teacherId: string;
+  students: Array<{
+    classId: string;
+    studentId: string;
+  }>
+}
+
+interface StudentClassRelation {
+  id: string;
+  title: string;
+  teacherId: string;
+  students: Array<{
+    assignedAt: string;
+    assignedBy: string;
+    classId: string;
+    studentId: string;
+  }>;
+}
 
 const StudentTeacherRelationship: React.FC = () => {
   const [students, setStudents] = useState<Student[]>([]);
   const [classes, setClasses] = useState<Class[]>([]);
-  const [message, setMessage] = useState<string>('');
-
-
+  const [selectedStudentId, setSelectedStudentId] = useState<string | null>(null);
+  const [enrolledClasses, setEnrolledClasses] = useState<Class[]>([]);
+  const [notEnrolledClasses, setNotEnrolledClasses] = useState<Class[]>([]);
 
   useEffect(() => {
-    axios.get('http://localhost:3005/students')
-      .then((response) => setStudents(response.data))
-      .catch((error) => console.error('Error fetching students:', error));
+    const fetchStudentsAndClasses = async () => {
+      try {
+        const [studentsRes, classesRes] = await Promise.all([
+          axios.get('http://localhost:3005/students'),
+          axios.get('http://localhost:3005/classes')
+        ]);
+        setStudents(studentsRes.data);
+        setClasses(classesRes.data);
+      } catch (error) {
+        console.error('Erro ao buscar dados:', error);
+      }
+    };
 
-    axios.get('http://localhost:3005/classes')
-      .then((response) => setClasses(response.data))
-      .catch((error) => console.error('Error fetching classes:', error));
-   
+    fetchStudentsAndClasses();
+    testing();
   }, []);
 
-  const handleJoin = async (studentId: string, classTitle: string) => {
-    const selectedStudent = students.find((student) => student.name === studentId);
-    const selectedClass = classes.find((classItem) => classItem.title === classTitle);
-
-    console.log(selectedClass);
-    console.log(selectedStudent);
-
-    if (!selectedStudent || !selectedClass) {
-      setMessage('Invalid student or class selection.');
-      return;
-    }
+  const testing = async () => {
     
-    if (selectedStudent.teachersCount >= 4) {
-      setMessage('This student already has the maximum of 4 teachers.');
-      return;
-    }
-
-    if (selectedClass.studentsCount >= 4) {
-      setMessage('This class/teacher already has the maximum of 4 students.');
-      return;
-    }
-
-    try {
-      await axios.post(`http://localhost:3005/classes/${classTitle}/join`, {
-        name: studentId
-
-      });
-      setMessage('Student joined the class successfully!');
-    } catch (error) {
-      setMessage('Error joining the student to the class.');
-      console.error('Join error:', error);
-    }
-  };
-
-  const handleChange = (studentId: string, classTitle: string) =>{
-    const selectedStudent = students.find((option) => option.id === studentId);
-    const selectedClass = classes.find((option) => option.teacherId === classTitle);
-    console.log(studentId)
-    console.log(classTitle)
-    console.log(selectedStudent)
-    console.log(selectedClass)
-
+    const classesList = await axios.get(`http://localhost:3005/classes`);
+    
   }
 
-  const handleLeave = async (studentId: string, classTitle: string) => {
-    try {
-      await axios.post(`http://localhost:3005/classes/${classTitle}/leave`, {
-        id: studentId,
-      });
-      setMessage('Student left the class successfully!');
-    } catch (error) {
-      setMessage('Error removing the student from the class.');
-      console.error('Leave error:', error);
+  console.log(classes)
+
+  useEffect(() => {
+    const fetchEnrolledClasses = async () => {
+
+      if (selectedStudentId) {
+        try {
+          const currentSelectedStudent = await axios.get(`http://localhost:3005/students/${selectedStudentId}`);
+          const classesList = await axios.get(`http://localhost:3005/classes`);
+
+          const enrolledClassesIds = classesList.data.map((relation: StudentClassRelation) => relation.students);
+          // const teste = classes.filter(option => !currentSelectedStudent(option.id));
+
+        console.log(students)
+        console.log(currentSelectedStudent.data)
+        console.log(classesList.data.filter((option: Class) => !selectedStudentId.includes(option.id)));
+        } catch (error) {
+          console.error('Erro ao buscar aulas do aluno:', error);
+        }
+      }
+    };
+
+    fetchEnrolledClasses();
+  }, [selectedStudentId, classes]);
+
+      /*
+          const enrolled = classes.filter(option => enrolledClassesIds.includes(option.id));
+          const notEnrolled = classes.filter(option => !enrolledClassesIds.includes(option.id));
+          setEnrolledClasses(enrolled);
+          setNotEnrolledClasses(notEnrolled);      
+          */
+
+  const handleJoinClass = async (classId: string) => {
+    if (selectedStudentId) {
+      try {
+        await axios.post(`http://localhost:3005/classes/${classId}/join`, { selectedStudentId });
+        setEnrolledClasses([...enrolledClasses, classes.find(option => option.id === classId)!]);
+        setNotEnrolledClasses(notEnrolledClasses.filter(option => option.id !== classId));
+      } catch (error) {
+        console.error('Erro ao se juntar à aula:', error);
+      }
+      console.log(classId)
+      console.log(selectedStudentId)
     }
   };
 
-  console.log(students)
-  console.log(classes)
+  const handleLeaveClass = async (classId: string) => {
+    if (selectedStudentId) {
+      try {
+        await axios.post(`http://localhost:3005/classes/${selectedStudentId}/leave`, { classId });
+        setNotEnrolledClasses([...notEnrolledClasses, classes.find(option => option.id === classId)!]);
+        setEnrolledClasses(enrolledClasses.filter(option => option.id !== classId));
+      } catch (error) {
+        console.error('Erro ao sair da aula:', error);
+      }
+    }
+  };
 
   return (
-    <div className="p-4"> 
-      <h1 className="text-2xl mb-4">Test Student-Teacher Relationship</h1>
-      {message && <p className="mb-4 text-green-500">{message}</p>}
-      <Formik
-        initialValues={{ studentId: '', teacherId: '' }}
-        onSubmit={(values, { resetForm }) => {
-          if (values.studentId && values.teacherId) {
-            handleChange(values.studentId, values.teacherId);
-          }
-          resetForm();
-        }}
+    <div className="max-w-3xl mx-auto p-6 text-black bg-gray-300 shadow-lg rounded-lg">
+      <label htmlFor="student-select" className="block text-lg font-medium text-gray-700 mb-2">Selecione um Aluno:</label>
+      <select
+        id="student-select"
+        className="w-full px-4 py-2 mb-6 border border-gray-300 text-black rounded-md shadow-sm focus:ring-2 focus:ring-blue-400 focus:outline-none"
+        onChange={(e) => setSelectedStudentId(e.target.value)}
+        value={selectedStudentId || ''}
       >
-        {({ values }) => (
-          <Form className="mb-4 text-black">
-            <div className="mb-2">
-              <label className="block mb-1">Select Student:</label>
-              <Field as="select" name="studentId" className="border p-2 rounded w-full">
-                <option value="">Select a student</option>
-                {students.map((option) => (
-                  <option key={option.id} value={option.id}>
-                    {option.name} - {option.teachersCount} / 4 teachers
-                  </option>
-                ))}
-              </Field>
-            </div>
-            <div className="mb-4">
-              <label className="block mb-1">Select Class (and Teacher):</label>
-              <Field as="select" name="teacherId" className="border p-2 rounded w-full">
-                <option value="">Select a class</option>
-                {classes.map((option) => (
-                  <option key={option.teacherId} value={option.teacherId}>
-                    {option.title} - Taught by {option.teacher.name} - {option.studentsCount} / 4 students
-                  </option>
-                ))}
-              </Field>
-            </div>
-            <button
-              type="submit"
-              className="bg-blue-500 text-white px-4 py-2 rounded"
-              disabled={!values.studentId || !values.teacherId}
-            >
-              Join Class
-            </button>
-          </Form>
-        )}
-        
-      </Formik>
-      <Formik
-        initialValues={{ studentId: '', teacherId: '' }}
-        onSubmit={(values, { resetForm }) => {
-          if (values.studentId && values.teacherId) {
-            handleLeave(values.studentId, values.teacherId);
-          }
-          resetForm();
-        }}
-      >
-        {({ values }) => (
-          <Form className='text-black'>
-            <div className="mb-2">
-              <label className="block mb-1">Select Student:</label>
-              <Field as="select" name="studentId" className="border p-2 rounded w-full">
-                <option value="">Select a student</option>
-                {students.map((option) => (
-                  <option key={option.id} value={option.id}>
-                    {option.name}
-                  </option>
-                ))}
-              </Field>
-            </div>
-            <div className="mb-4">
-              <label className="block mb-1">Select Class (and Teacher):</label>
-              <Field as="select" name="teacherId" className="border p-2 rounded w-full">
-                <option value="">Select a class</option>
-                {classes.map((option) => (
-                  <option key={option.teacherId} value={option.title}>
-                    {option.title} - Taught by {option.teacher.name} - {option.studentsCount} / 4 students
-                  </option>
-                ))}
-              </Field>
-            </div>
-            <button
-              type="submit"
-              className="bg-red-500 text-white px-4 py-2 rounded"
-              disabled={!values.studentId || !values.teacherId}
-            >
-              Leave Class
-            </button>
-          </Form>
-        )}
-      </Formik>
+        <option value="">-- Selecione um Aluno --</option>
+        {students.map(student => (
+          <option key={student.id} value={student.id}>{student.name}</option>
+        ))}
+      </select>
+
+      {selectedStudentId && (
+        <div className="space-y-6">
+          <div className="bg-white p-4 rounded-lg shadow-md">
+            <h3 className="text-xl font-semibold mb-4">Aulas em que o aluno está inscrito:</h3>
+            {enrolledClasses.length > 0 ? (
+              enrolledClasses.map(option => (
+                <div key={option.id} className="flex justify-between items-center mb-2">
+                  <span className="text-gray-700">{option.title}</span>
+                  <button
+                    onClick={() => handleLeaveClass(option.id)}
+                    className="bg-red-500 text-white px-4 py-1 rounded-md hover:bg-red-600 transition"
+                  >
+                    Sair
+                  </button>
+                </div>
+              ))
+            ) : (
+              <p className="text-gray-500">Nenhuma inscrição encontrada.</p>
+            )}
+          </div>
+          <div className="bg-white p-4 rounded-lg shadow-md">
+            <h3 className="text-xl font-semibold mb-4">Aulas disponíveis para o aluno:</h3>
+            {notEnrolledClasses.length > 0 ? (
+              notEnrolledClasses.map(option => (
+                <div key={option.id} className="flex justify-between items-center mb-2">
+                  <span className="text-gray-700">{option.title}</span>
+                  <button
+                    onClick={() => handleJoinClass(option.id)}
+                    className="bg-blue-500 text-white px-4 py-1 rounded-md hover:bg-blue-600 transition"
+                  >
+                    Juntar-se
+                  </button>
+                </div>
+              ))
+            ) : (
+              <p className="text-gray-500">Nenhuma aula disponível para inscrição.</p>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
