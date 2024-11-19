@@ -19,7 +19,6 @@ const validationSchema = Yup.object({
   name: Yup.string().required('Full Name is required'),
   email: Yup.string().email().required('Email is required'),
   avatar: Yup.string().required('Email is required'),
-
 });
 
 const TeacherForm: React.FC = () => {
@@ -44,9 +43,9 @@ const TeacherForm: React.FC = () => {
           <div className="relative sm:max-w-xl sm:mx-auto text-white px-4 py-10 bg-gradient-to-r from-indigo-700 to-purple-500 shadow-lg sm:rounded-3xl sm:p-20">
             <div className="flex justify-center items-center h-12">
               <h2 className="text-2xl font-bold mt-6 flex items-center justify-center absolute top-8">
-                Student Form!
+                Teacher Form!
               </h2>
-              <p className="text-gray-300 mb-4">Register a new Student.</p>
+              <p className="text-gray-300 mb-4">Register a new Teacher.</p>
             </div>
             <Formik
               initialValues={{ name: '', email: '', avatar: '' }}

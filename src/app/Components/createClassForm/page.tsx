@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import axios from 'axios';
 import * as Yup from 'yup';
+import { useRouter } from 'next/navigation';
 
 type Teacher = {
   id: number;
@@ -12,6 +13,7 @@ type Teacher = {
 const CreateClassForm: React.FC = () => {
   const [teachers, setTeachers] = useState<Teacher[]>([]);
   const [message, setMessage] = useState<string>('');
+  const router = useRouter();
 
   useEffect(() => {
     axios.get('http://localhost:3005/teachers')
@@ -81,13 +83,21 @@ const CreateClassForm: React.FC = () => {
               </Field>
               <ErrorMessage name="teacherId" component="div" className="text-red-500" />
             </div>
-            <button
-              type="submit"
-              className="bg-blue-500 text-white px-4 py-2 rounded"
-              disabled={values.teacherId === 0}
-            >
-              Create Class
-            </button>
+            <div className="flex justify-between">
+              <button
+                type="submit"
+                className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105"
+              >
+                Submit →
+              </button>
+              <button
+                type="button"
+                onClick={() => router.push('/')}
+                className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full transition duration-200 ease-in-out transform hover:scale-105"
+              >
+                ← Back
+              </button>
+            </div>
           </Form>
         )}
       </Formik>

@@ -19,7 +19,6 @@ const validationSchema = Yup.object({
   name: Yup.string().required('Full Name is required'),
   email: Yup.string().email().required('Email is required'),
   avatar: Yup.string().required('Email is required'),
-
 });
 
 const StudentForm: React.FC = () => {

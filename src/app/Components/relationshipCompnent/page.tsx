@@ -6,11 +6,11 @@ interface Student {
   id: string;
   name: string;
   email: string;
-}
-
-interface StudentClasses {
-  classId: string;
-  studentId: string;
+  classes: Array<{
+    classId: string;
+    studentId: string;
+  }>;
+  teachersCount: number;
 }
 
 interface Class {
@@ -18,18 +18,6 @@ interface Class {
   title: string;
   teacherId: string;
   students: Array<{
-    classId: string;
-    studentId: string;
-  }>
-}
-
-interface StudentClassRelation {
-  id: string;
-  title: string;
-  teacherId: string;
-  students: Array<{
-    assignedAt: string;
-    assignedBy: string;
     classId: string;
     studentId: string;
   }>;
@@ -41,6 +29,7 @@ const StudentTeacherRelationship: React.FC = () => {
   const [selectedStudentId, setSelectedStudentId] = useState<string | null>(null);
   const [enrolledClasses, setEnrolledClasses] = useState<Class[]>([]);
   const [notEnrolledClasses, setNotEnrolledClasses] = useState<Class[]>([]);
+  const [message, setMessage] = useState<string>('');
 
   useEffect(() => {
     const fetchStudentsAndClasses = async () => {
@@ -57,76 +46,128 @@ const StudentTeacherRelationship: React.FC = () => {
     };
 
     fetchStudentsAndClasses();
-    testing();
   }, []);
 
-  const testing = async () => {
-    
-    const classesList = await axios.get(`http://localhost:3005/classes`);
-    
-  }
-
-  console.log(classes)
-
+  
   useEffect(() => {
-    const fetchEnrolledClasses = async () => {
-
+    const fetchEnrolledClasses = () => {
       if (selectedStudentId) {
-        try {
-          const currentSelectedStudent = await axios.get(`http://localhost:3005/students/${selectedStudentId}`);
-          const classesList = await axios.get(`http://localhost:3005/classes`);
+        const studentId = Number(selectedStudentId);
+  
+        const enrolled = classes.filter((classItem) =>
+          classItem.students.some((student) => Number(student.studentId) === studentId)
+        );
+  
+        const notEnrolled = classes.filter((classItem) =>
+          !classItem.students.some((student) => Number(student.studentId) === studentId)
+        );
+  
+        setEnrolledClasses(enrolled);
+        setNotEnrolledClasses(notEnrolled);
 
-          const enrolledClassesIds = classesList.data.map((relation: StudentClassRelation) => relation.students);
-          // const teste = classes.filter(option => !currentSelectedStudent(option.id));
-
-        console.log(students)
-        console.log(currentSelectedStudent.data)
-        console.log(classesList.data.filter((option: Class) => !selectedStudentId.includes(option.id)));
-        } catch (error) {
-          console.error('Erro ao buscar aulas do aluno:', error);
-        }
+      } else {
+        
+        setEnrolledClasses([]);
+        setNotEnrolledClasses([]);
       }
     };
-
+  
     fetchEnrolledClasses();
   }, [selectedStudentId, classes]);
+  
 
-      /*
-          const enrolled = classes.filter(option => enrolledClassesIds.includes(option.id));
-          const notEnrolled = classes.filter(option => !enrolledClassesIds.includes(option.id));
-          setEnrolledClasses(enrolled);
-          setNotEnrolledClasses(notEnrolled);      
-          */
+  console.log(students)
+  console.log(classes)
+  const handleJoinClass = async (studentId: string, classId: string) => {
+    const selectedStudent = students.filter(student => studentId.includes(student.id));
+    const selectedClass = classes.find((classItem) => classItem.id === classId);
 
-  const handleJoinClass = async (classId: string) => {
-    if (selectedStudentId) {
-      try {
-        await axios.post(`http://localhost:3005/classes/${classId}/join`, { selectedStudentId });
-        setEnrolledClasses([...enrolledClasses, classes.find(option => option.id === classId)!]);
-        setNotEnrolledClasses(notEnrolledClasses.filter(option => option.id !== classId));
-      } catch (error) {
-        console.error('Erro ao se juntar à aula:', error);
-      }
-      console.log(classId)
-      console.log(selectedStudentId)
+    console.log(selectedStudent)
+    console.log(selectedClass)
+
+    if (!selectedStudent || !selectedClass) {
+      setMessage('Invalid student or class selection.');
+      return;
+    }
+  
+    if (selectedClass.students.length >= 4) {
+      setMessage('This class already has the maximum of 4 students.');
+      return;
+    }
+  
+    const teacherId = selectedClass.teacherId;
+    const teacherStudentsCount = classes
+      .filter((classItem) => classItem.teacherId === teacherId)
+      .reduce((count, classItem) => count + classItem.students.length, 0);
+  
+    if (teacherStudentsCount >= 4) {
+      setMessage('This teacher already has the maximum of 4 students.');
+      return;
+    }
+
+    const StudentsCount = students
+      .filter((studentList) => studentList.id === selectedStudent[0].id)
+      .reduce((count, studentList) => count + studentList.classes.length, 0);
+  
+
+    if (StudentsCount >= 4) {
+      setMessage('This student already has the maximum of 4 students.');
+      return;
+    }
+    console.log(StudentsCount)
+  
+    try {
+      await axios.post(`http://localhost:3005/classes/${classId}/join`, {
+        id: studentId, 
+      });
+  
+      setMessage('Student joined the class successfully!');  
+      setEnrolledClasses((prev) => [...prev, selectedClass]);
+      setNotEnrolledClasses((prev) =>
+        prev.filter((classItem) => classItem.id !== classId)
+      );
+ 
+    } catch (error) {
+      setMessage('Error joining the student to the class.');
+      console.error('Join error:', error);
     }
   };
-
-  const handleLeaveClass = async (classId: string) => {
-    if (selectedStudentId) {
-      try {
-        await axios.post(`http://localhost:3005/classes/${selectedStudentId}/leave`, { classId });
-        setNotEnrolledClasses([...notEnrolledClasses, classes.find(option => option.id === classId)!]);
-        setEnrolledClasses(enrolledClasses.filter(option => option.id !== classId));
-      } catch (error) {
-        console.error('Erro ao sair da aula:', error);
-      }
+  
+  const handleLeaveClass = async (studentId: string, classId: string) => {
+    const selectedStudent = students.filter(student => studentId.includes(student.id));
+    const selectedClass = classes.find((classItem) => classItem.id === classId);
+  
+    console.log('Selected Class:', selectedClass);
+    console.log('Selected Student:', selectedStudent);
+  
+    if (!selectedStudent || !selectedClass) {
+      setMessage('Invalid student or class selection.');
+      return;
+    }
+  
+    try {
+      await axios.post(`http://localhost:3005/classes/${classId}/leave`, {
+        id: studentId, 
+      });
+  
+      setMessage('Student removed from the class successfully!');
+  
+      setEnrolledClasses((prev) =>
+        prev.filter((classItem) => classItem.id !== classId)
+      );
+  
+      setNotEnrolledClasses((prev) => [...prev, selectedClass]);
+    } catch (error) {
+      setMessage('Error removing the student from the class.');
+      console.error('Leave error:', error);
     }
   };
+  
 
   return (
     <div className="max-w-3xl mx-auto p-6 text-black bg-gray-300 shadow-lg rounded-lg">
       <label htmlFor="student-select" className="block text-lg font-medium text-gray-700 mb-2">Selecione um Aluno:</label>
+      {message && <p className="mb-4 text-green-500">{message}</p>}
       <select
         id="student-select"
         className="w-full px-4 py-2 mb-6 border border-gray-300 text-black rounded-md shadow-sm focus:ring-2 focus:ring-blue-400 focus:outline-none"
@@ -148,7 +189,7 @@ const StudentTeacherRelationship: React.FC = () => {
                 <div key={option.id} className="flex justify-between items-center mb-2">
                   <span className="text-gray-700">{option.title}</span>
                   <button
-                    onClick={() => handleLeaveClass(option.id)}
+                    onClick={() => handleLeaveClass(selectedStudentId, option.id)}
                     className="bg-red-500 text-white px-4 py-1 rounded-md hover:bg-red-600 transition"
                   >
                     Sair
@@ -166,7 +207,7 @@ const StudentTeacherRelationship: React.FC = () => {
                 <div key={option.id} className="flex justify-between items-center mb-2">
                   <span className="text-gray-700">{option.title}</span>
                   <button
-                    onClick={() => handleJoinClass(option.id)}
+                    onClick={() => handleJoinClass(selectedStudentId, option.id)}
                     className="bg-blue-500 text-white px-4 py-1 rounded-md hover:bg-blue-600 transition"
                   >
                     Juntar-se

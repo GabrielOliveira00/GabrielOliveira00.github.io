@@ -22,8 +22,6 @@ const TeacherList: React.FC = () =>  {
       setOpen(false)
       window.location.reload();    
   };
-
-  console.log(data);
   
   return (
     <QueryClientProvider client={queryClient}>
@@ -85,7 +83,7 @@ const TeacherList: React.FC = () =>  {
           </>}   
           <div className="flex justify-center items-center">
             <Link href="/Components/teacherForm" className="absolute bottom-10 shadow bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-              Register a Student
+              Register a Teacher
             </Link>
           </div>
           </div>

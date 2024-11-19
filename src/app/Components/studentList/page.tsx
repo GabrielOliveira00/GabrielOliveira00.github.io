@@ -22,8 +22,6 @@ const StudentList: React.FC = () =>  {
       setOpen(false)
       window.location.reload();    
   };
-
-  console.log(data);
   
   return (
     <QueryClientProvider client={queryClient}>
@@ -31,12 +29,7 @@ const StudentList: React.FC = () =>  {
         <div className='absolute inset-0 bg-gradient-to-r from-indigo-700 to-purple-500 shadow-lg transform -skew-y-5 -rotate-6 rounded-3xl'/>
         <div className="text-white relative px-4 bg-indigo-400 shadow-lg sm:rounded-3xl min-h-[600px] justify-between">  
         <div>
-        <Link href={`/Components/relationshipCompnent`} className="bg-green-600 hover:bg-green-700 text-white font-semibold py-[5px] px-[5px] ml-3 transition rounded-full duration-200 ease-in-out transform text-sm">
-                          RelationShip
-                      </Link>
-                      <Link href={`/Components/createClassForm`} className="bg-green-600 hover:bg-green-700 text-white font-semibold py-[5px] px-[5px] ml-3 transition rounded-full duration-200 ease-in-out transform text-sm">
-                      createClassForm
-                      </Link>
+
           {!isLoading && <>
             {data && (
               <div className='flex'>
