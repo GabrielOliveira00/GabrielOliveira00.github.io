@@ -9,13 +9,10 @@ import { useRouter } from 'next/navigation';
 
 const queryClient = new QueryClient();
 
-
 const TeacherSummary = () =>  {  
   const router = useRouter();
   const [open, setOpen] = useState(false)
   const {data, isLoading, isError} = useTeacherData();
-
-  console.log(data)
   
   return (
     <QueryClientProvider client={queryClient}>  
@@ -60,8 +57,7 @@ const TeacherSummary = () =>  {
                           </button>
                         </div>  
                     </div>
-                  ))}
-   
+                  ))}   
                 </div>  
                 <Modal open={open} onClose={() => setOpen(false)}>
                   <div className="text-center w-56">
@@ -86,11 +82,9 @@ const TeacherSummary = () =>  {
                       </button>
                     </div>
                   </div>
-                </Modal>    
-           
+                </Modal>               
               </div>              
-            )}</>}
-    
+            )}</>}    
           { isLoading && <span>Datas is being loaded</span>}
           { isError && <span>Error</span>}
         </div>

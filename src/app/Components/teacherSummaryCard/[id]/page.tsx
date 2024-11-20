@@ -43,7 +43,7 @@ export default function SummaryCard ()  {
   const router = useRouter();
   const { id } = params;
   const [formData, setFormData] = useState<FormData | null>(null)
-  const [enrolledClasses, setEnrolledClasses] = useState<Class[]>([]);
+  const [enrolledClasses, setEnrolledStudents] = useState<Student[]>([]);
   const [students, setStudents] = useState<Student[]>([]);
   const [classes, setClasses] = useState<Class[]>([]);
 
@@ -51,7 +51,7 @@ export default function SummaryCard ()  {
     if (id) {
       const fetchItem = async () => {
         try {
-          const response = await axios.get<FormData>(`http://localhost:3005/students/${id}`);
+          const response = await axios.get<FormData>(`http://localhost:3005/teachers/${id}`);
           setFormData(response.data);
         } catch (error) {
           console.error('Error fetching item:', error);
@@ -78,20 +78,30 @@ export default function SummaryCard ()  {
   }, []);
 
   useEffect(() => {
-    const fetchEnrolledClasses = () => {
-      if (formData) {
-        const studentId = Number(formData.id);
+    const fetchProfessorClassesAndStudents = async () => {
+      try {
+        const selectedTeacherId = formData?.id; 
 
-        const enrolled = classes.filter((classItem) =>
-          classItem.students.some((student) => Number(student.studentId) === studentId)
-        );  
-        setEnrolledClasses(enrolled);
-      } else {
-        setEnrolledClasses([]);
+        const professorClasses = classes.filter(
+          (classItem) => Number(classItem.teacherId) === Number(selectedTeacherId)
+        );
+  
+        const studentIdsInClasses = professorClasses
+          .flatMap((classItem) => classItem.students.map((student) => student.studentId));
+  
+        const studentsInClasses = students.filter((student) =>
+          studentIdsInClasses.includes(student.id)
+        );
+  
+        setEnrolledStudents(studentsInClasses);
+      } catch (error) {
+        console.error('Erro ao buscar alunos das aulas do professor:', error);
+        setEnrolledStudents([]);
       }
-    };  
-    fetchEnrolledClasses();
-  }, [formData, classes]);
+    };
+  
+    fetchProfessorClassesAndStudents();
+  }, [formData, classes, students]);
 
     return(
       <QueryClientProvider client={queryClient}>
@@ -105,12 +115,12 @@ export default function SummaryCard ()  {
                   <p>Email: {formData?.email} </p>        
               </div>
               <div className=' border-b-2 w-full'></div>
-              <div className="w-full h-[150px] relative flex flex-col items-center justify-between shadow-lg mt-4 mb-4 appearance-none rounded">
+              <div className="w-full h-[200px] relative flex flex-col items-center justify-between shadow-lg mt-4 mb-4 appearance-none rounded">
                 <h3 className="text-xl font-semibold mb-4 mx-4 flex justify-center ">Aulas Inscrito:</h3>
                 {enrolledClasses.length > 0 ? (
                   enrolledClasses.map(option => (
-                    <div key={option.id} className="flex justify-between items-center w-full mx-4 py-1 px-3 shadow-md bg-indigo-200 text-indigo-700 leading-tight focus:outline-none focus:shadow-outline">
-                      <span className="text-gray-700">{option.title}</span>
+                    <div key={option.id} className="flex justify-between items-center w-full mx-4 my-1 py-1 px-3 shadow-md bg-indigo-200 text-indigo-700 leading-tight focus:outline-none focus:shadow-outline">
+                      <span className="text-gray-700">{option.name}</span>
                     </div>
                   ))
                 ) : (

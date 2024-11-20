@@ -17,8 +17,7 @@ interface FormData {
 
 const validationSchema = Yup.object({
   name: Yup.string().required('Name is required'),
-  email: Yup.string().email('Invalid email address').required('Email is required'),
-  
+  email: Yup.string().email('Invalid email address').required('Email is required'),  
 });
 
 const StudentFormUpdate = () => {   
@@ -46,13 +45,11 @@ const StudentFormUpdate = () => {
 
   const handleSubmit = async (values: FormData) => {
     try {
-
       await axios.patch(`http://localhost:3005/students/${id}`, values); 
       router.push('/');
     } catch (error) {
       console.error('Error updating data:', error);
     }
-    console.log(values);
   };
 
   if (loading || !formData) {
@@ -74,8 +71,7 @@ const StudentFormUpdate = () => {
           <Formik
             initialValues={formData}
             validationSchema={validationSchema} 
-            onSubmit={handleSubmit}
-            
+            onSubmit={handleSubmit}            
           >
             {({ isSubmitting }) => (
               <Form>

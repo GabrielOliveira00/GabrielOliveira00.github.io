@@ -38,7 +38,7 @@ const TeacherList: React.FC = () =>  {
                     <div key={uniqueID()} className='flex flex-col justify-center items-center'> 
                       <div className="relative flex items-center justify-between shadow-lg mt-4 mb-4 appearance-none border rounded w-full py-1 px-3 bg-indigo-200 text-indigo-700 leading-tight focus:outline-none focus:shadow-outline">
                         <div className='flex items-center w-full'>
-                          <Link href={`/Components/studentSummaryCard/${option.id}`} className='w-full'>
+                          <Link href={`/Components/teacherSummaryCard/${option.id}`} className='w-full'>
                             <h2 className="text-black font-semibold">{option.name}</h2>
                             <span className="text-black text-md">{option.subject}</span>
                             <img src={option.avatar} alt="avatar Image" className='rounded-full' height={20} width={20}/>

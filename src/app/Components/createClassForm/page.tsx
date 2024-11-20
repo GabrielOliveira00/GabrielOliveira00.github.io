@@ -32,7 +32,6 @@ const CreateClassForm: React.FC = () => {
       const response = await axios.post('http://localhost:3005/classes/', {
         title: values.title,
         teacherId: values.teacherId,
-
       });
       setMessage('Class created successfully!');
     } catch (error) {
@@ -44,9 +43,7 @@ const CreateClassForm: React.FC = () => {
   return (
     <div className="p-6 max-w-md mx-auto bg-white text-black shadow-md rounded-md">
       <h1 className="text-2xl font-semibold mb-4">Create a New Class</h1>
-
       {message && <p className="mb-4 text-green-500">{message}</p>}
-
       <Formik
         initialValues={{ title: '', teacherId: 0 }}
         validationSchema={validationSchema}
@@ -64,7 +61,6 @@ const CreateClassForm: React.FC = () => {
               />
               <ErrorMessage name="title" component="div" className="text-red-500" />
             </div>
-
             <div className="mb-4">
               <label className="block mb-1">Select Teacher:</label>
               <Field
@@ -84,19 +80,19 @@ const CreateClassForm: React.FC = () => {
               <ErrorMessage name="teacherId" component="div" className="text-red-500" />
             </div>
             <div className="flex justify-between">
-              <button
-                type="submit"
-                className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105"
-              >
-                Submit →
-              </button>
-              <button
+            <button
                 type="button"
                 onClick={() => router.push('/')}
                 className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full transition duration-200 ease-in-out transform hover:scale-105"
               >
                 ← Back
               </button>
+              <button
+                type="submit"
+                className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105"
+              >
+                Submit →
+              </button>            
             </div>
           </Form>
         )}

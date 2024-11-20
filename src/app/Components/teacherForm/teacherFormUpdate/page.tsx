@@ -4,15 +4,12 @@ import React, { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { QueryClient, QueryClientProvider } from 'react-query';
-
 import axios from 'axios';
 
 const queryClient = new QueryClient();
 
-
 const TeacherFormUpdate: React.FC = () => {
   const searchParams = useSearchParams();
-
   const router = useRouter();
 
   const idCatcher = searchParams.get("id")
@@ -22,8 +19,6 @@ const TeacherFormUpdate: React.FC = () => {
     lastName: "",
     subject: ""
   })
-
-  console.log(idCatcher)
 
   const handleSubmit = () => {
     axios.put(`http://localhost:3005/student/${idCatcher}`,values)

@@ -29,7 +29,6 @@ const StudentList: React.FC = () =>  {
         <div className='absolute inset-0 bg-gradient-to-r from-indigo-700 to-purple-500 shadow-lg transform -skew-y-5 -rotate-6 rounded-3xl'/>
         <div className="text-white relative px-4 bg-indigo-400 shadow-lg sm:rounded-3xl min-h-[600px] justify-between">  
         <div>
-
           {!isLoading && <>
             {data && (
               <div className='flex'>
@@ -77,12 +76,11 @@ const StudentList: React.FC = () =>  {
                         </div>
                       </Modal>    
                     </div>  
-                    
-                  ))}        
+                  ))}
                 </div>               
               </div>
             )} 
-          </>}   
+          </>}
           <div className="flex justify-center items-center">
             <Link href="/Components/studentForm" className="absolute bottom-10 shadow bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
               Register a Student

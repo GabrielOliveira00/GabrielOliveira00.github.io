@@ -96,7 +96,6 @@ const TeacherForm: React.FC = () => {
                       className="text-gray-300"
                     />
                   </div>
-
                   <div className="flex justify-between">
                     <button
                       type="button"

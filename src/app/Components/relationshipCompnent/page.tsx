@@ -44,10 +44,8 @@ const StudentTeacherRelationship: React.FC = () => {
         console.error('Erro ao buscar dados:', error);
       }
     };
-
     fetchStudentsAndClasses();
   }, []);
-
   
   useEffect(() => {
     const fetchEnrolledClasses = () => {
@@ -66,24 +64,16 @@ const StudentTeacherRelationship: React.FC = () => {
         setNotEnrolledClasses(notEnrolled);
 
       } else {
-        
         setEnrolledClasses([]);
         setNotEnrolledClasses([]);
       }
-    };
-  
+    };  
     fetchEnrolledClasses();
   }, [selectedStudentId, classes]);
   
-
-  console.log(students)
-  console.log(classes)
   const handleJoinClass = async (studentId: string, classId: string) => {
     const selectedStudent = students.filter(student => studentId.includes(student.id));
     const selectedClass = classes.find((classItem) => classItem.id === classId);
-
-    console.log(selectedStudent)
-    console.log(selectedClass)
 
     if (!selectedStudent || !selectedClass) {
       setMessage('Invalid student or class selection.');
@@ -91,7 +81,7 @@ const StudentTeacherRelationship: React.FC = () => {
     }
   
     if (selectedClass.students.length >= 4) {
-      setMessage('This class already has the maximum of 4 students.');
+      setMessage('Esta Classe já tem maximo de 4 estudantes.');
       return;
     }
   
@@ -101,27 +91,25 @@ const StudentTeacherRelationship: React.FC = () => {
       .reduce((count, classItem) => count + classItem.students.length, 0);
   
     if (teacherStudentsCount >= 4) {
-      setMessage('This teacher already has the maximum of 4 students.');
+      setMessage('Este professor já tem maximo de 4 estudantes.');
       return;
     }
 
     const StudentsCount = students
       .filter((studentList) => studentList.id === selectedStudent[0].id)
-      .reduce((count, studentList) => count + studentList.classes.length, 0);
-  
+      .reduce((count, studentList) => count + studentList.classes.length, 0);  
 
     if (StudentsCount >= 4) {
-      setMessage('This student already has the maximum of 4 students.');
+      setMessage('Este estudante já tem maximo de 4 estudantes.');
       return;
     }
-    console.log(StudentsCount)
   
     try {
       await axios.post(`http://localhost:3005/classes/${classId}/join`, {
         id: studentId, 
       });
   
-      setMessage('Student joined the class successfully!');  
+      setMessage('O estudante juntou a aula com sucesso!');  
       setEnrolledClasses((prev) => [...prev, selectedClass]);
       setNotEnrolledClasses((prev) =>
         prev.filter((classItem) => classItem.id !== classId)
@@ -136,9 +124,6 @@ const StudentTeacherRelationship: React.FC = () => {
   const handleLeaveClass = async (studentId: string, classId: string) => {
     const selectedStudent = students.filter(student => studentId.includes(student.id));
     const selectedClass = classes.find((classItem) => classItem.id === classId);
-  
-    console.log('Selected Class:', selectedClass);
-    console.log('Selected Student:', selectedStudent);
   
     if (!selectedStudent || !selectedClass) {
       setMessage('Invalid student or class selection.');
@@ -163,11 +148,10 @@ const StudentTeacherRelationship: React.FC = () => {
     }
   };
   
-
   return (
     <div className="max-w-3xl mx-auto p-6 text-black bg-gray-300 shadow-lg rounded-lg">
       <label htmlFor="student-select" className="block text-lg font-medium text-gray-700 mb-2">Selecione um Aluno:</label>
-      {message && <p className="mb-4 text-green-500">{message}</p>}
+      {message && <p className="mb-4 text-red-500">{message}</p>}
       <select
         id="student-select"
         className="w-full px-4 py-2 mb-6 border border-gray-300 text-black rounded-md shadow-sm focus:ring-2 focus:ring-blue-400 focus:outline-none"
@@ -179,7 +163,6 @@ const StudentTeacherRelationship: React.FC = () => {
           <option key={student.id} value={student.id}>{student.name}</option>
         ))}
       </select>
-
       {selectedStudentId && (
         <div className="space-y-6">
           <div className="bg-white p-4 rounded-lg shadow-md">
